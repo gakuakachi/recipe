@@ -18,7 +18,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_24_004501) do
     t.boolean "active", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["access_token"], name: "index_api_keys_on_access_token", unique: true
+    t.index ["access_token"], name: "index_api_keys_on_access_token"
     t.index ["user_id"], name: "index_api_keys_on_user_id"
   end
 
@@ -43,6 +43,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_24_004501) do
   end
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "uuid", null: false
     t.string "email", null: false
     t.string "crypted_password", null: false
     t.string "salt", null: false
@@ -50,6 +51,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_24_004501) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["uuid"], name: "index_users_on_uuid", unique: true
   end
 
   add_foreign_key "api_keys", "users"

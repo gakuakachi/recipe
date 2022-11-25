@@ -1,5 +1,20 @@
 class ApiKey < ApplicationRecord
-  before_create :generate_access_token
+  belongs_to :user
+  before_create :generate_access_token, :set_active, :set_expiration
+   
+  def expired?
+    expires_at < DateTime.now
+  end
+
+  def set_active
+    self.active = true
+  end
+
+  def set_expiration
+    self.expires_at = DateTime.now + 1
+  end
+
+  private
 
   def generate_access_token
     begin
