@@ -23,6 +23,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_24_004501) do
   end
 
   create_table "rates", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "uuid", null: false
     t.bigint "user_id"
     t.bigint "recipe_id"
     t.float "value", null: false
@@ -30,9 +31,11 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_24_004501) do
     t.datetime "updated_at", null: false
     t.index ["recipe_id"], name: "index_rates_on_recipe_id"
     t.index ["user_id"], name: "index_rates_on_user_id"
+    t.index ["uuid"], name: "index_rates_on_uuid", unique: true
   end
 
   create_table "recipes", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|
+    t.string "uuid", null: false
     t.bigint "user_id", null: false
     t.text "description", null: false
     t.text "ingredients", null: false
@@ -40,6 +43,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_11_24_004501) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_recipes_on_user_id"
+    t.index ["uuid"], name: "index_recipes_on_uuid", unique: true
   end
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_0900_ai_ci", force: :cascade do |t|

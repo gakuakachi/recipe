@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  include UuidAutoGenerate
   authenticates_with_sorcery!
   before_create :generate_uuid
   
@@ -36,12 +37,6 @@ class User < ApplicationRecord
   end
 
   private
-
-  def generate_uuid
-    begin
-      self.uuid = SecureRandom.uuid
-    end while self.class.exists?(uuid: uuid)
-  end
 
   def api_key
     @api_key ||= ApiKey.find_by_user_id(self.id)
