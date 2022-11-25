@@ -13,10 +13,10 @@ class User < ApplicationRecord
   validates :name, presence: true
   validates :email, presence: true, uniqueness: true
 
-  def self.authenticate?(access_token)
+  def self.find_from_access_token(access_token)
     api_key = ApiKey.find_by_access_token(access_token)
-    return false if !api_key || api_key.expired? || !api_key.active
-    return self.find(api_key.user_id).present?
+    return if !api_key || api_key.expired? || !api_key.active
+    return self.find(api_key.user_id)
   end
 
   def activate!
