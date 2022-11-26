@@ -105,6 +105,7 @@ GEM
     faraday-net_http (3.0.2)
     globalid (1.0.0)
       activesupport (>= 5.0)
+    hash_validator (1.1.0)
     hashie (5.0.0)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
@@ -132,6 +133,8 @@ GEM
     mail (2.7.1)
       mini_mime (>= 0.1.1)
     marcel (1.0.2)
+    measured (2.8.2)
+      activesupport (>= 5.2)
     method_source (1.0.0)
     mini_mime (1.1.2)
     minitest (5.16.3)
@@ -267,7 +270,9 @@ DEPENDENCIES
   debug
   factory_bot_rails
   faker
+  hash_validator
   kaminari
+  measured
   mysql2 (~> 0.5)
   pry-byebug
   puma (~> 5.0)

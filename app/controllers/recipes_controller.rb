@@ -37,8 +37,14 @@ class RecipesController < ApplicationController
     head :not_found
   end
 
+  def ingredients_params
+    ingredients = params.require(:recipe).permit(ingredients: %i[name quantity unit])[:ingredients]
+    ingredients.map do |ingredient|
+      ingredient.merge(quantity: ingredient[:quantity].to_f)
+    end
+  end
+
   def recipe_params
-    params.require(:recipe).permit(:description, steps: [],
-                                                 ingredients: %i[name quantity unit]).merge(user: current_user)
+    params.require(:recipe).permit(:description, steps: []).merge(user: current_user, ingredients: ingredients_params)
   end
 end

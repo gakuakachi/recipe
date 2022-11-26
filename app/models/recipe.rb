@@ -10,5 +10,5 @@ class Recipe < ApplicationRecord
 
   validates :description, presence: true
   validates :steps, presence: true
-  validates :ingredients, presence: true
+  validates :ingredients, presence: true, ingredients: true
 end
