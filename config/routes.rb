@@ -1,8 +1,7 @@
 Rails.application.routes.draw do
   resources :users, only: [:create]
   resources :sessions, only: [:create]
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Defines the root path route ("/")
-  # root "articles#index"
+  resources :recipes, only: [:index, :create, :update, :destroy] do
+    resources :rates, only: [:create, :update, :destroy]
+  end
 end

@@ -1,0 +1,73 @@
+require "rails_helper"
+
+describe RecipesController, type: :request do
+  let!(:user) { FactoryBot.create(:user) }
+  let!(:api_key) { FactoryBot.create(:api_key, user: user) }
+
+  describe "GET /recipes" do
+    before do
+      FactoryBot.create_list(:recipe, 3, user: user)
+    end
+    it "success" do
+      get "/recipes", headers: headers(api_key)
+      expect(response.status).to eq 200
+      expect(JSON.parse(response.body)["recipes"].size).to eq 3
+    end
+  end
+
+  describe "POST /recipes" do
+    it "creates a recipe" do
+      #TODO fix to handle with ingredients
+      params = {
+        recipe: {
+          description: "test recipe",
+          steps: ["Add salt"],
+          ingredients: ["salt"]
+        }
+      }
+      expect { post "/recipes", params: params, headers: headers(api_key) }.to change(Recipe, :count).by(1)
+      expect(response.status).to eq 201
+    end
+  end
+  
+  describe "PUT /recipe/:id" do
+    context "when recipe is not found" do
+      let!(:recipe) { FactoryBot.create(:recipe, user: FactoryBot.create(:user)) }      
+      it "does not update a recipe" do
+        params = {
+          recipe: {
+            description: "test update recipe",
+            steps: ["Add spice"],
+            ingredients: ["spice"]
+          }          
+        }
+        put "/recipes/" + recipe.uuid, params: params, headers: headers(api_key)
+        expect(response.status).to eq 404
+      end        
+    end
+    context "when recipe is found" do
+      let!(:recipe) { FactoryBot.create(:recipe, user: user) }
+      it "updates a recipe" do
+        params = {
+          recipe: {
+            description: "test update recipe",
+            steps: ["Add spice"],
+            ingredients: ["spice"]
+          }          
+        }
+        put "/recipes/" + recipe.uuid, params: params, headers: headers(api_key)
+        expect(response.status).to eq 200
+        expect(JSON.parse(response.body)["recipe"]["steps"].first).to eq "Add spice"
+        expect(JSON.parse(response.body)["recipe"]["ingredients"].first).to eq "spice"
+      end
+    end
+  end
+  
+  describe "DELETE /recipe/:id" do
+    let!(:recipe) { FactoryBot.create(:recipe, user: user) }
+    it "deletes a recipe" do
+      expect { delete "/recipes/" + recipe.uuid, headers: headers(api_key) }.to change(Recipe, :count).by(-1)
+      expect(response.status).to eq 200
+    end
+  end    
+end
