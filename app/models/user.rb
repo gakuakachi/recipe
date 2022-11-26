@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 class User < ApplicationRecord
   include UuidAutoGenerate
   authenticates_with_sorcery!
   before_create :generate_uuid
-  
+
   has_many :api_keys, dependent: :destroy
   has_many :recipes, dependent: :destroy
   has_many :rates, dependent: :destroy
@@ -16,11 +18,12 @@ class User < ApplicationRecord
   def self.find_from_access_token(access_token)
     api_key = ApiKey.find_by_access_token(access_token)
     return if !api_key || api_key.expired? || !api_key.active
-    return self.find(api_key.user_id)
+
+    find(api_key.user_id)
   end
 
   def activate!
-    return ApiKey.create!(user_id: self.id) if !api_key
+    return ApiKey.create!(user_id: id) unless api_key
 
     if !api_key.active || api_key.expired?
       api_key.set_active
@@ -28,7 +31,7 @@ class User < ApplicationRecord
       api_key.save!
     end
 
-    return api_key
+    api_key
   end
 
   def deactivate!
@@ -39,6 +42,6 @@ class User < ApplicationRecord
   private
 
   def api_key
-    @api_key ||= ApiKey.find_by_user_id(self.id)
+    @api_key ||= ApiKey.find_by_user_id(id)
   end
 end

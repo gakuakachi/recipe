@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Rate < ApplicationRecord
   include UuidAutoGenerate
   belongs_to :user

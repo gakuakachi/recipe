@@ -1,6 +1,7 @@
+# frozen_string_literal: true
+
 class SessionsController < ApplicationController
   def create
-
     @user = login(create_params[:email], create_params[:password])
     if @user
       api_key = @user.activate!

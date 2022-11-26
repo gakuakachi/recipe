@@ -1,29 +1,31 @@
-require "rails_helper"
+# frozen_string_literal: true
 
-RSpec.describe "POST /sessions" do
-  context "when user is found" do
-    let(:password) { "password" }
+require 'rails_helper'
+
+RSpec.describe 'POST /sessions' do
+  context 'when user is found' do
+    let(:password) { 'password' }
     let(:user) { FactoryBot.create(:user, password: password, password_confirmation: password) }
-    it "creates an api key" do
+    it 'creates an api key' do
       params = {
         session: {
           email: user.email,
           password: password
         }
       }
-      expect { post "/sessions", params: params }.to change(ApiKey, :count).by(1)
+      expect { post '/sessions', params: params }.to change(ApiKey, :count).by(1)
     end
   end
 
-  context "when user is not found" do
-    it "does not create an api key" do
+  context 'when user is not found' do
+    it 'does not create an api key' do
       params = {
         session: {
-          email: "dummy",
-          password: "dummy"
+          email: 'dummy',
+          password: 'dummy'
         }
       }
-      expect { post "/sessions", params: params }.to change(ApiKey, :count).by(0)
+      expect { post '/sessions', params: params }.to change(ApiKey, :count).by(0)
     end
   end
 end

@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 class RatesController < ApplicationController
   before_action :authenticate
   before_action :set_recipe
-  before_action :set_rate, only: [:update, :destroy]
+  before_action :set_rate, only: %i[update destroy]
   before_action :set_rate_by_recipe_and_user, only: [:create]
-  before_action :rate?, only: [:update, :destroy]
+  before_action :rate?, only: %i[update destroy]
 
   def create
     @rate = Rate.new(rate_params)
@@ -28,9 +30,9 @@ class RatesController < ApplicationController
 
   def set_recipe
     @recipe = Recipe.where(uuid: params[:recipe_id], user: current_user).take
-    if @recipe.blank?
-      head :not_found
-    end
+    return unless @recipe.blank?
+
+    head :not_found
   end
 
   def set_rate
@@ -39,15 +41,15 @@ class RatesController < ApplicationController
 
   def set_rate_by_recipe_and_user
     @rate = Rate.where(recipe: @recipe, user: current_user).take
-    if @rate.present?
-      head :bad_request
-    end
+    return unless @rate.present?
+
+    head :bad_request
   end
 
   def rate?
-    if @rate.blank?
-      head :not_found
-    end
+    return unless @rate.blank?
+
+    head :not_found
   end
 
   def rate_params

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Recipe < ApplicationRecord
   include UuidAutoGenerate
   belongs_to :user

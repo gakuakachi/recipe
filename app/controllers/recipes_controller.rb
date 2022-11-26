@@ -1,9 +1,12 @@
+# frozen_string_literal: true
+
 class RecipesController < ApplicationController
   before_action :authenticate
-  before_action :set_recipe, only: [:update, :destroy]
+  before_action :set_recipe, only: %i[update destroy]
   def index
     @recipes = Recipe.all.includes(:user, rates: [:user]).page(params[:page])
-    render json: @recipes, root: "recipes", adapter: :json, each_serializer: RecipeSerializer, include: ["rates", "rates.user", "user"], status: :ok
+    render json: @recipes, root: 'recipes', adapter: :json, each_serializer: RecipeSerializer,
+           include: ['rates', 'rates.user', 'user'], status: :ok
   end
 
   def create
@@ -24,17 +27,18 @@ class RecipesController < ApplicationController
     @recipe.destroy!
     head :ok
   end
-  
+
   private
 
   def set_recipe
     @recipe = Recipe.where(uuid: params[:id], user: current_user).take
-    if @recipe.blank?
-      head :not_found
-    end
+    return unless @recipe.blank?
+
+    head :not_found
   end
 
   def recipe_params
-    params.require(:recipe).permit(:description, steps: [], ingredients: [:name, :quantity, :unit]).merge(user: current_user)
+    params.require(:recipe).permit(:description, steps: [],
+                                                 ingredients: %i[name quantity unit]).merge(user: current_user)
   end
 end
