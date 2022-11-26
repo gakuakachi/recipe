@@ -7,7 +7,7 @@ class RecipesController < ApplicationController
   end
 
   def create
-    @recipe = Recipe.new(create_params.to_h)
+    @recipe = Recipe.new(recipe_params)
     if @recipe.save
       render json: { recipe: @recipe }, status: :created
     else
@@ -16,7 +16,7 @@ class RecipesController < ApplicationController
   end
 
   def update
-    @recipe.update!(update_params)
+    @recipe.update!(recipe_params)
     render json: { recipe: @recipe }, status: :ok
   end
 
@@ -34,11 +34,7 @@ class RecipesController < ApplicationController
     end
   end
 
-  def create_params
+  def recipe_params
     params.require(:recipe).permit(:description, steps: [], ingredients: [:name, :quantity, :unit]).merge(user: current_user)
-  end
-
-  def update_params
-    params.require(:recipe).permit(:description, steps: [], ingredients: [:name, :quantity, :unit])
   end
 end

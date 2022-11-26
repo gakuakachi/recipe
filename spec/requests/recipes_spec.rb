@@ -25,7 +25,11 @@ describe RecipesController, type: :request do
         recipe: {
           description: "test recipe",
           steps: ["Add salt"],
-          ingredients: ["salt"]
+          ingredients: [{
+            name: "Salt",
+            quantity: 10,
+            unit: "gram"
+          }]
         }
       }
       expect { post "/recipes", params: params, headers: headers(api_key) }.to change(Recipe, :count).by(1)
@@ -41,7 +45,11 @@ describe RecipesController, type: :request do
           recipe: {
             description: "test update recipe",
             steps: ["Add spice"],
-            ingredients: ["spice"]
+            ingredients: [{
+              name: "Spice",
+              quantity: 20,
+              unit: "gram"                
+            }]
           }          
         }
         put "/recipes/" + recipe.uuid, params: params, headers: headers(api_key)
@@ -55,13 +63,17 @@ describe RecipesController, type: :request do
           recipe: {
             description: "test update recipe",
             steps: ["Add spice"],
-            ingredients: ["spice"]
+            ingredients: [{
+              name: "Spice",
+              quantity: 20,
+              unit: "gram"                
+            }]
           }          
         }
         put "/recipes/" + recipe.uuid, params: params, headers: headers(api_key)
         expect(response.status).to eq 200
         expect(JSON.parse(response.body)["recipe"]["steps"].first).to eq "Add spice"
-        expect(JSON.parse(response.body)["recipe"]["ingredients"].first).to eq "spice"
+        expect(JSON.parse(response.body)["recipe"]["ingredients"].first["name"]).to eq "Spice"
       end
     end
   end

@@ -3,8 +3,8 @@ class Recipe < ApplicationRecord
   belongs_to :user
   has_many :rates
 
-  serialize :steps, Array
-  serialize :ingredients, Array
+  serialize :steps, JSON
+  serialize :ingredients, JSON
 
   validates :description, presence: true
   validates :steps, presence: true
