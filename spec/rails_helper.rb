@@ -62,4 +62,8 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   config.include AuthSupport, type: :request
+  if Bullet.enable?
+    config.before(:each) { Bullet.start_request }
+    config.after(:each)  { Bullet.end_request }
+  end
 end

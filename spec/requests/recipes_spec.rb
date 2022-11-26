@@ -6,7 +6,10 @@ describe RecipesController, type: :request do
 
   describe "GET /recipes" do
     before do
-      FactoryBot.create_list(:recipe, 3, user: user)
+      recipes = FactoryBot.create_list(:recipe, 3, user: user)
+      recipes.map do |recipe|
+        FactoryBot.create_list(:rate, 3, recipe: recipe)
+      end
     end
     it "success" do
       get "/recipes", headers: headers(api_key)

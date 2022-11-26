@@ -2,8 +2,8 @@ class RecipesController < ApplicationController
   before_action :authenticate
   before_action :set_recipe, only: [:update, :destroy]
   def index
-    @recipes = Recipe.all
-    render json: { recipes: @recipes }, status: :ok
+    @recipes = Recipe.all.includes(:user, rates: [:user]).page(params[:page])
+    render json: @recipes, root: "recipes", adapter: :json, each_serializer: RecipeSerializer, include: ["rates", "rates.user", "user"], status: :ok
   end
 
   def create
