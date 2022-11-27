@@ -6,7 +6,7 @@ class UsersController < ApplicationController
     if @user.save
       head :created
     else
-      head :bad_request
+      render json: { errors: @user.errors.map(&:full_message) }, status: :bad_request
     end
   end
 

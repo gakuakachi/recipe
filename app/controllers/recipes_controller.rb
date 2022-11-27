@@ -18,7 +18,7 @@ class RecipesController < ApplicationController
       render json: @recipe, root: 'recipe', adapter: :json, serializer: RecipeSerializer,
              measure_format: @measure_format, include: ['rates', 'rates.user', 'user'], status: :created
     else
-      head :bad_request
+      render json: { errors: @recipe.errors.map(&:full_message) }, status: :bad_request
     end
   end
 

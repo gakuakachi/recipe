@@ -16,7 +16,7 @@ class RatesController < ApplicationController
              serializer: RateSerializer,
              status: :created
     else
-      head :bad_request
+      render json: { errors: @rate.errors.map(&:full_message) }, status: :bad_request
     end
   end
 
