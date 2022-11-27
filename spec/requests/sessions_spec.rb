@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe 'POST /sessions' do
   context 'when user is found' do
-    let(:password) { 'password' }
+    let(:password) { SecureRandom.hex }
     let(:user) { FactoryBot.create(:user, password: password, password_confirmation: password) }
     it 'creates an api key' do
       params = {

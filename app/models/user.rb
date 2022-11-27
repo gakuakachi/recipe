@@ -9,7 +9,7 @@ class User < ApplicationRecord
   has_many :recipes, dependent: :destroy
   has_many :rates, dependent: :destroy
 
-  validates :password, length: { minimum: 3 }
+  validates :password, length: { minimum: 10 }
   validates :password, confirmation: true
   validates :password_confirmation, presence: true
   validates :name, presence: true
