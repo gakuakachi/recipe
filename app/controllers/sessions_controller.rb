@@ -3,7 +3,7 @@
 class SessionsController < ApplicationController
   def create
     @user = login(create_params[:email], create_params[:password])
-    if @user
+    if @user.present?
       api_key = @user.activate!
       render json: { access_token: api_key.access_token }, status: :created
     else
