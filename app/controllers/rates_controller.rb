@@ -10,7 +10,11 @@ class RatesController < ApplicationController
   def create
     @rate = @recipe.rates.build(rate_params)
     if @rate.save
-      render json: { rate: @rate }, status: :created
+      render json: @rate,
+             root: 'rate',
+             adapter: :json,
+             serializer: RateSerializer,
+             status: :created
     else
       head :bad_request
     end
@@ -18,7 +22,11 @@ class RatesController < ApplicationController
 
   def update
     @rate.update!(rate_params)
-    render json: { rate: @rate }, status: :ok
+    render json: @rate,
+           root: 'rate',
+           adapter: :json,
+           serializer: RateSerializer,
+           status: :ok
   end
 
   def destroy
