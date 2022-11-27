@@ -17,7 +17,7 @@ class User < ApplicationRecord
 
   def self.find_from_access_token(access_token)
     api_key = ApiKey.find_by_access_token(access_token)
-    return if !api_key || api_key.expired? || !api_key.active
+    return if api_key.blank? || api_key.expired? || !api_key.active
 
     find(api_key.user_id)
   end
@@ -32,11 +32,6 @@ class User < ApplicationRecord
     end
 
     api_key
-  end
-
-  def deactivate!
-    api_key.active = false
-    api_key.save!
   end
 
   private
