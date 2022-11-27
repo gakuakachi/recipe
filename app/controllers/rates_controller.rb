@@ -5,16 +5,10 @@ class RatesController < ApplicationController
   before_action :set_recipe
   before_action :check_recipe
   before_action :set_rate, only: %i[update destroy]
-  before_action :set_rate_by_recipe_and_user, only: [:create]
   before_action :check_rate, only: %i[update destroy]
 
   def create
-    if @rate.present?
-      head :bad_request
-      return
-    end
-
-    @rate = Rate.new(rate_params)
+    @rate = @recipe.rates.build(rate_params)
     if @rate.save
       render json: { rate: @rate }, status: :created
     else
@@ -46,10 +40,6 @@ class RatesController < ApplicationController
 
   def set_rate
     @rate = Rate.find_by(uuid: params[:id], user: current_user)
-  end
-
-  def set_rate_by_recipe_and_user
-    @rate = Rate.find_by(recipe: @recipe, user: current_user)
   end
 
   def check_rate
