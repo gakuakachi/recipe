@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe User, type: :model do
+RSpec.describe ApiKey, type: :model do
   describe 'self.create' do
     it 'create api key with expected parameters' do
       user = FactoryBot.create(:user)
