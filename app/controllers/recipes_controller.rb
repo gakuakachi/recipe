@@ -9,14 +9,7 @@ class RecipesController < ApplicationController
       return
     end
 
-    @recipes = Recipe.all.includes(:user, rates: [:user]).page(params[:page])
-    render json: @recipes,
-           root: 'recipes',
-           adapter: :json,
-           each_serializer: RecipeSerializer,
-           measure_format: @measure_format,
-           include: ['rates', 'rates.user', 'user'],
-           status: :ok
+    render json: cache_recipes, status: :ok
   end
 
   def create
@@ -51,6 +44,18 @@ class RecipesController < ApplicationController
   end
 
   private
+
+  def cache_recipes
+    Rails.cache.fetch("cache_recipes_#{params[:page]}", expires_in: 1.minute) do
+      recipes = Recipe.all.includes(:user, rates: [:user]).page(params[:page])
+      render_to_string json: recipes,
+                       root: 'recipes',
+                       adapter: :json,
+                       each_serializer: RecipeSerializer,
+                       measure_format: @measure_format,
+                       include: ['rates', 'rates.user', 'user']
+    end
+  end
 
   def set_measure_format_option
     @measure_format = params[:measure_format].presence || Ingredient::MEASURE_METRIC

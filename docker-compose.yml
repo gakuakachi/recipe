@@ -11,6 +11,7 @@ services:
       - 3000:3000
     depends_on:
       - db
+      - redis
   db:
     restart: always
     image: mysql:8.0.25
@@ -21,7 +22,14 @@ services:
     ports:
       - 3306:3306
     volumes:
-      - mysql-data:/var/lib/mysql
+      - mysql:/var/lib/mysql
+  redis:
+    image: redis
+    command: redis-server --appendonly yes
+    ports:
+      - 6379:6379
+    volumes:
+      - redis:/var/lib/redis/data
 volumes:
-  mysql-data:
-    driver: local
+  mysql:
+  redis:
