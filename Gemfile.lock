@@ -127,6 +127,7 @@ GEM
       activerecord
       kaminari-core (= 1.2.2)
     kaminari-core (1.2.2)
+    liner (0.2.4)
     loofah (2.19.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -135,6 +136,8 @@ GEM
     marcel (1.0.2)
     measured (2.8.2)
       activesupport (>= 5.2)
+    memoizable (0.4.2)
+      thread_safe (~> 0.3, >= 0.3.1)
     method_source (1.0.0)
     mini_mime (1.1.2)
     minitest (5.16.3)
@@ -165,6 +168,7 @@ GEM
     parallel (1.22.1)
     parser (3.1.2.1)
       ast (~> 2.4.1)
+    parslet (2.0.0)
     pry (0.14.1)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -240,6 +244,7 @@ GEM
       parser (>= 3.1.1.0)
     ruby-progressbar (1.11.0)
     ruby2_keywords (0.0.5)
+    signed_multiset (0.2.1)
     snaky_hash (2.0.1)
       hashie
       version_gem (~> 1.1, >= 1.1.1)
@@ -248,11 +253,17 @@ GEM
       oauth (~> 0.5, >= 0.5.5)
       oauth2 (~> 2.0)
     thor (1.2.1)
+    thread_safe (0.3.6)
     timeout (0.3.0)
     tzinfo (2.0.5)
       concurrent-ruby (~> 1.0)
     unicode-display_width (2.3.0)
     uniform_notifier (1.16.0)
+    unitwise (2.3.0)
+      liner (~> 0.2)
+      memoizable (~> 0.4)
+      parslet (~> 2.0)
+      signed_multiset (~> 0.2)
     version_gem (1.1.1)
     websocket-driver (0.7.5)
       websocket-extensions (>= 0.1.0)
@@ -281,6 +292,7 @@ DEPENDENCIES
   rubocop
   sorcery
   tzinfo-data
+  unitwise
 
 RUBY VERSION
    ruby 3.0.4p208

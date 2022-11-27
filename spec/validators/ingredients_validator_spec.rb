@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'rails_helper'
 
 describe IngredientsValidator do
@@ -18,7 +20,7 @@ describe IngredientsValidator do
           {
             'name' => Faker::Food.spice,
             'quantity' => rand(0.1..100.0),
-            'unit' => 'gram'
+            'unit' => 'g'
           }
         ]
       end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class IngredientsValidator < ActiveModel::EachValidator
   INGREDIENTS_HASH_SCHEMA = {
     'name' => 'string',
@@ -8,10 +10,16 @@ class IngredientsValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, values)
     values.each do |value|
       validator = HashValidator.validate(value, INGREDIENTS_HASH_SCHEMA)
-      next if validator.valid? && Measured::Weight.unit_or_alias?(value['unit'])
+      next if validator.valid? && valid_unit?(value['unit'])
 
       record.errors.add(attribute, 'have invalid hash value')
       return
     end
+  end
+
+  private
+
+  def valid_unit?(unit)
+    Ingredient::METRIC_WEIGHT_UNITS.include?(unit) || Ingredient::METRIC_VOLUME_UNITS.include?(unit)
   end
 end

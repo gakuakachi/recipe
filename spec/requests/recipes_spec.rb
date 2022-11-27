@@ -7,16 +7,45 @@ describe RecipesController, type: :request do
   let!(:api_key) { FactoryBot.create(:api_key, user: user) }
 
   describe 'GET /recipes' do
-    before do
+    let!(:recipes) do
       recipes = FactoryBot.create_list(:recipe, 3, user: user)
       recipes.map do |recipe|
         FactoryBot.create_list(:rate, 3, recipe: recipe)
       end
+      recipes
     end
-    it 'success' do
-      get '/recipes', headers: headers(api_key)
-      expect(response.status).to eq 200
-      expect(JSON.parse(response.body)['recipes'].size).to eq 3
+
+    context 'when measure format param is present' do
+      context 'when measure format param is metric' do
+        it 'success' do
+          get '/recipes', headers: headers(api_key), params: { measure_format: 'metric' }
+          expect(response.status).to eq 200
+          expect(JSON.parse(response.body)['recipes'].size).to eq 3
+        end
+      end
+
+      context 'when measure format param is imperial' do
+        it 'success' do
+          get '/recipes', headers: headers(api_key), params: { measure_format: 'imperial' }
+          expect(response.status).to eq 200
+          expect(JSON.parse(response.body)['recipes'].size).to eq 3
+        end
+      end
+
+      context 'when measure format param is invalid' do
+        it 'success' do
+          get '/recipes', headers: headers(api_key), params: { measure_format: 'invalid' }
+          expect(response.status).to eq 400
+        end
+      end
+    end
+
+    context 'when measure format param is blank' do
+      it 'success' do
+        get '/recipes', headers: headers(api_key)
+        expect(response.status).to eq 200
+        expect(JSON.parse(response.body)['recipes'].size).to eq 3
+      end
     end
   end
 
@@ -29,10 +58,11 @@ describe RecipesController, type: :request do
           steps: ['Add salt'],
           ingredients: [{
             name: 'Salt',
-            quantity: 10,
-            unit: 'gram'
+            quantity: 10.0,
+            unit: 'g'
           }]
-        }
+        },
+        measure_format: 'imperial'
       }
       expect { post '/recipes', params: params, headers: headers(api_key) }.to change(Recipe, :count).by(1)
       expect(response.status).to eq 201
@@ -50,7 +80,7 @@ describe RecipesController, type: :request do
             ingredients: [{
               name: 'Spice',
               quantity: 20,
-              unit: 'gram'
+              unit: 'g'
             }]
           }
         }
@@ -68,7 +98,7 @@ describe RecipesController, type: :request do
             ingredients: [{
               name: 'Spice',
               quantity: 20,
-              unit: 'gram'
+              unit: 'g'
             }]
           }
         }
