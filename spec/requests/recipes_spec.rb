@@ -55,9 +55,9 @@ describe RecipesController, type: :request do
       params = {
         recipe: {
           description: 'test recipe',
-          steps: ['Add salt'],
+          steps: ['Cook'],
           ingredients: [{
-            name: 'Salt',
+            name: Faker::Food.spice,
             quantity: 10.0,
             unit: 'g'
           }]
@@ -72,13 +72,14 @@ describe RecipesController, type: :request do
   describe 'PUT /recipe/:id' do
     context 'when recipe is not found' do
       let!(:recipe) { FactoryBot.create(:recipe, user: FactoryBot.create(:user)) }
+      let!(:ingredient_name) { Faker::Food.spice }
       it 'does not update a recipe' do
         params = {
           recipe: {
             description: 'test update recipe',
-            steps: ['Add spice'],
+            steps: ['Cook'],
             ingredients: [{
-              name: 'Spice',
+              name: ingredient_name,
               quantity: 20,
               unit: 'g'
             }]
@@ -90,13 +91,14 @@ describe RecipesController, type: :request do
     end
     context 'when recipe is found' do
       let!(:recipe) { FactoryBot.create(:recipe, user: user) }
+      let!(:ingredient_name) { Faker::Food.spice }
       it 'updates a recipe' do
         params = {
           recipe: {
             description: 'test update recipe',
-            steps: ['Add spice'],
+            steps: ['Grill'],
             ingredients: [{
-              name: 'Spice',
+              name: ingredient_name,
               quantity: 20,
               unit: 'g'
             }]
@@ -104,8 +106,8 @@ describe RecipesController, type: :request do
         }
         put "/recipes/#{recipe.uuid}", params: params, headers: headers(api_key)
         expect(response.status).to eq 200
-        expect(JSON.parse(response.body)['recipe']['steps'].first).to eq 'Add spice'
-        expect(JSON.parse(response.body)['recipe']['ingredients'].first['name']).to eq 'Spice'
+        expect(JSON.parse(response.body)['recipe']['steps'].first).to eq 'Grill'
+        expect(JSON.parse(response.body)['recipe']['ingredients'].first['name']).to eq ingredient_name
       end
     end
   end

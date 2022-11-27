@@ -7,8 +7,8 @@ RSpec.describe 'POST /users' do
     it 'creates a user' do
       valid_params = {
         user: {
-          email: 'test@test.com',
-          name: 'test',
+          email: Faker::Internet.email,
+          name: Faker::Name.name,
           password: 'test_password',
           password_confirmation: 'test_password'
         }
@@ -22,8 +22,8 @@ RSpec.describe 'POST /users' do
     it 'does not create a user' do
       invalid_params = {
         user: {
-          email: 'test@test.com',
-          name: 'test',
+          email: Faker::Internet.email,
+          name: Faker::Name.name,
           password: 'test_password',
           password_confirmation: 'invalid_password'
         }
