@@ -1,24 +1,39 @@
-# README
+# Recipe API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## 1:Run the app
+Run the app.
+DB setup will be taken care of.
 
-Things you may want to cover:
+```
+docker-compose up
+```
 
-* Ruby version
+## 2:Set up the database
 
-* System dependencies
+Set up the database when you run the app for the first time.
 
-* Configuration
+```
+docker-compose run app rails db:setup
+```
 
-* Database creation
+## 3:Create a session
 
-* Database initialization
+Create a session to get an access token by calling POST /sessions with user information.
+Access token will be used for authentication.
 
-* How to run the test suite
+`POST /sessions`
 
-* Services (job queues, cache servers, search engines, etc.)
+```
+curl -X POST -H "Content-Type: application/json" -d '{"email":"<EMAIL>", "password": "<PASSWORD>"}' http://localhost:3000/sessions
+```
 
-* Deployment instructions
+## 4:Call endpoints
 
-* ...
+Call the endpoints with the access token you made at step 3.
+Here is an example of calling the endpoint to get recipes.
+
+`GET /recipes`
+
+```
+curl -H "Content-Type: application/json" -H "Authorization: Token <ACCESS_TOKEN>" http://localhost:3000/recipes
+```
