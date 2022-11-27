@@ -17,7 +17,8 @@ class SessionsController < ApplicationController
 
   private
 
-  # the following method is not implemented in rails api so it is necessary to add the following method definition to make login method work
+  # the following method is not implemented in rails api,
+  # so it is necessary to add the following method definition to make login method work
   # source: https://github.com/NoamB/sorcery/issues/724
   def form_authenticity_token; end
 end

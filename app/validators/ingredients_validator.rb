@@ -13,7 +13,7 @@ class IngredientsValidator < ActiveModel::EachValidator
       next if validator.valid? && valid_unit?(value['unit'])
 
       record.errors.add(attribute, 'have invalid hash value')
-      return
+      break
     end
   end
 

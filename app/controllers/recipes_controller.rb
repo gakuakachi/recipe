@@ -2,7 +2,6 @@
 
 class RecipesController < ApplicationController
   before_action :authenticate
-  before_action :set_recipe, only: %i[update destroy]
   before_action :set_measure_format_option, only: %i[index create update]
   def index
     unless Ingredient.valid_measure_format?(@measure_format)
@@ -11,8 +10,13 @@ class RecipesController < ApplicationController
     end
 
     @recipes = Recipe.all.includes(:user, rates: [:user]).page(params[:page])
-    render json: @recipes, root: 'recipes', adapter: :json, each_serializer: RecipeSerializer, measure_format: @measure_format,
-           include: ['rates', 'rates.user', 'user'], status: :ok
+    render json: @recipes,
+           root: 'recipes',
+           adapter: :json,
+           each_serializer: RecipeSerializer,
+           measure_format: @measure_format,
+           include: ['rates', 'rates.user', 'user'],
+           status: :ok
   end
 
   def create
@@ -26,24 +30,27 @@ class RecipesController < ApplicationController
   end
 
   def update
-    @recipe.update!(recipe_params)
-    render json: @recipe, root: 'recipe', adapter: :json, serializer: RecipeSerializer,
-           measure_format: @measure_format, include: ['rates', 'rates.user', 'user'], status: :ok
+    @recipe = Recipe.includes(:user, rates: [:user]).find_by(uuid: params[:id], user: current_user)
+    if @recipe.blank?
+      head :not_found
+    else
+      @recipe.update!(recipe_params)
+      render json: @recipe, root: 'recipe', adapter: :json, serializer: RecipeSerializer,
+             measure_format: @measure_format, include: ['rates', 'rates.user', 'user'], status: :ok
+    end
   end
 
   def destroy
-    @recipe.destroy!
-    head :ok
+    @recipe = Recipe.find_by(uuid: params[:id], user: current_user)
+    if @recipe.blank?
+      head :not_found
+    else
+      @recipe.destroy!
+      head :ok
+    end
   end
 
   private
-
-  def set_recipe
-    @recipe = Recipe.includes(:user, rates: [:user]).find_by(uuid: params[:id], user: current_user)
-    return unless @recipe.blank?
-
-    head :not_found
-  end
 
   def set_measure_format_option
     @measure_format = params[:measure_format].presence || Ingredient::MEASURE_METRIC
