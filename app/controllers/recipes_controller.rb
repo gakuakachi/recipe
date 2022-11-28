@@ -28,7 +28,7 @@ class RecipesController < ApplicationController
       head :not_found
     else
       render json: @recipe, root: 'recipe', adapter: :json, serializer: RecipeSerializer,
-             measure_format: @measure_format, include: ['rates', 'rates.user', 'user'], status: :ok      
+             measure_format: @measure_format, include: ['rates', 'rates.user', 'user'], status: :ok
     end
   end
 

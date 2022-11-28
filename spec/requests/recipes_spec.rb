@@ -60,7 +60,7 @@ describe RecipesController, type: :request do
 
     context 'when recipe is found' do
       it 'returns recipes' do
-        get '/recipes/' + recipe.uuid, headers: headers(api_key)
+        get "/recipes/#{recipe.uuid}", headers: headers(api_key)
         expect(response.status).to eq 200
         expect(JSON.parse(response.body)['recipe']).to be_present
       end
