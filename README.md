@@ -2,7 +2,7 @@
 
 ## 1:Run the app
 Run the app.
-DB setup will be taken care of.
+DB set up will be taken care of.
 
 ```
 docker-compose up
