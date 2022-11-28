@@ -2,7 +2,7 @@
 
 class RecipesController < ApplicationController
   before_action :authenticate
-  before_action :set_measure_format_option, only: %i[index create update]
+  before_action :set_measure_format_option, only: %i[index show create update]
   def index
     unless Ingredient.valid_measure_format?(@measure_format)
       head :bad_request
@@ -19,6 +19,16 @@ class RecipesController < ApplicationController
              measure_format: @measure_format, include: ['rates', 'rates.user', 'user'], status: :created
     else
       render json: { errors: @recipe.errors.map(&:full_message) }, status: :bad_request
+    end
+  end
+
+  def show
+    @recipe = Recipe.includes(:user, rates: [:user]).find_by(uuid: params[:id], user: current_user)
+    if @recipe.blank?
+      head :not_found
+    else
+      render json: @recipe, root: 'recipe', adapter: :json, serializer: RecipeSerializer,
+             measure_format: @measure_format, include: ['rates', 'rates.user', 'user'], status: :ok      
     end
   end
 

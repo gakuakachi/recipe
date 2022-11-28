@@ -49,6 +49,24 @@ describe RecipesController, type: :request do
     end
   end
 
+  describe 'GET /recipes/:id' do
+    let!(:recipe) { FactoryBot.create(:recipe, user: user) }
+    context 'when recipe is not found' do
+      it 'does not return recipes' do
+        get '/recipes/invalid_uuid', headers: headers(api_key)
+        expect(response.status).to eq 404
+      end
+    end
+
+    context 'when recipe is found' do
+      it 'returns recipes' do
+        get '/recipes/' + recipe.uuid, headers: headers(api_key)
+        expect(response.status).to eq 200
+        expect(JSON.parse(response.body)['recipe']).to be_present
+      end
+    end
+  end
+
   describe 'POST /recipes' do
     it 'creates a recipe' do
       # TODO: fix to handle with ingredients
